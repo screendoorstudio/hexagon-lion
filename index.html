@@ -170,53 +170,53 @@
     <div class="scene">
         <div class="title">The Adventures Of Hexagon Lion, Square Man, and Triangirl</div>
 
-        <!-- Hexagon Lion - Orange - tight gaps like Square Man -->
+        <!-- Hexagon Lion - Orange - all hexagons 60x70, 5px gaps -->
         <div class="character" id="hexagon-lion">
             <div class="speech-bubble">Hi, I'm Hexagon Lion!</div>
-            <svg width="115" height="165" viewBox="0 0 115 165" xmlns="http://www.w3.org/2000/svg">
-                <!-- Top hexagon (head) - centered -->
-                <polygon points="57,0 87,17 87,52 57,69 27,52 27,17" fill="#FF8C00"/>
-                <!-- Middle left hexagon -->
-                <polygon points="27,74 57,91 57,126 27,143 0,126 0,91" fill="#FF8C00"/>
-                <!-- Middle right hexagon -->
-                <polygon points="87,74 115,91 115,126 87,143 57,126 57,91" fill="#FF8C00"/>
-                <!-- Bottom hexagon (jaw) -->
+            <svg width="125" height="220" viewBox="0 0 125 220" xmlns="http://www.w3.org/2000/svg">
+                <!-- Top hexagon - centered (w=60, h=70) -->
+                <polygon points="62,0 92,17 92,52 62,70 32,52 32,17" fill="#FF8C00"/>
+                <!-- Middle left hexagon - 5px gap below top -->
+                <polygon points="30,75 60,92 60,127 30,145 0,127 0,92" fill="#FF8C00"/>
+                <!-- Middle right hexagon - 5px gap from left -->
+                <polygon points="95,75 125,92 125,127 95,145 65,127 65,92" fill="#FF8C00"/>
+                <!-- Bottom hexagon - 5px gap below middle -->
                 <g class="jaw">
-                    <polygon points="57,148 87,165 87,200 57,217 27,200 27,165" fill="#FF8C00"/>
+                    <polygon points="62,150 92,167 92,202 62,220 32,202 32,167" fill="#FF8C00"/>
                 </g>
             </svg>
         </div>
 
-        <!-- Square Man - Purple - tight gaps -->
+        <!-- Square Man - Purple - all squares 70x70, 5px gaps -->
         <div class="character" id="square-man">
             <div class="speech-bubble">Hi, I'm Square Man!</div>
-            <svg width="150" height="220" viewBox="0 0 150 220" xmlns="http://www.w3.org/2000/svg">
-                <!-- Top square (head) - centered -->
-                <rect x="37" y="0" width="76" height="68" fill="#A855F7"/>
-                <!-- Middle left square -->
-                <rect x="0" y="73" width="72" height="68" fill="#A855F7"/>
-                <!-- Middle right square -->
-                <rect x="78" y="73" width="72" height="68" fill="#A855F7"/>
-                <!-- Bottom square (jaw) - centered -->
+            <svg width="145" height="225" viewBox="0 0 145 225" xmlns="http://www.w3.org/2000/svg">
+                <!-- Top square - centered -->
+                <rect x="37" y="0" width="70" height="70" fill="#A855F7"/>
+                <!-- Middle left square - 5px gap below top -->
+                <rect x="0" y="75" width="70" height="70" fill="#A855F7"/>
+                <!-- Middle right square - 5px gap from left -->
+                <rect x="75" y="75" width="70" height="70" fill="#A855F7"/>
+                <!-- Bottom square - 5px gap below middle -->
                 <g class="jaw">
-                    <rect x="37" y="146" width="76" height="68" fill="#A855F7"/>
+                    <rect x="37" y="150" width="70" height="70" fill="#A855F7"/>
                 </g>
             </svg>
         </div>
 
-        <!-- Triangirl - Green - equilateral triangles, tight gaps like Square Man -->
+        <!-- Triangirl - Green - all triangles base=60 height=52 (equilateral), 5px gaps -->
         <div class="character" id="triangirl">
             <div class="speech-bubble">Hi, I'm Triangirl!</div>
-            <svg width="140" height="115" viewBox="0 0 140 115" xmlns="http://www.w3.org/2000/svg">
-                <!-- Top left triangle (pointing UP) - equilateral: base 45, height 39 -->
-                <polygon points="0,42 45,42 22,3" fill="#22C55E"/>
-                <!-- Top middle triangle (pointing DOWN) - equilateral -->
-                <polygon points="50,3 95,3 72,42" fill="#22C55E"/>
-                <!-- Top right triangle (pointing UP) - equilateral -->
-                <polygon points="100,42 145,42 122,3" fill="#22C55E"/>
-                <!-- Bottom triangle (jaw - pointing DOWN) - equilateral -->
+            <svg width="190" height="110" viewBox="0 0 190 110" xmlns="http://www.w3.org/2000/svg">
+                <!-- Top left triangle (pointing UP) -->
+                <polygon points="0,52 60,52 30,0" fill="#22C55E"/>
+                <!-- Top middle triangle (pointing DOWN) - 5px gap -->
+                <polygon points="65,0 125,0 95,52" fill="#22C55E"/>
+                <!-- Top right triangle (pointing UP) - 5px gap -->
+                <polygon points="130,52 190,52 160,0" fill="#22C55E"/>
+                <!-- Bottom triangle (jaw - pointing DOWN) - 5px gap below middle -->
                 <g class="jaw">
-                    <polygon points="50,47 95,47 72,86" fill="#22C55E"/>
+                    <polygon points="65,57 125,57 95,109" fill="#22C55E"/>
                 </g>
             </svg>
         </div>
