@@ -36,11 +36,27 @@
             opacity: 0;
             transform: translateY(50px);
             transition: opacity 0.8s ease, transform 0.8s ease;
+            cursor: pointer;
         }
 
         .character.visible {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        .character.zoomed {
+            transform: scale(1.5) translateY(0);
+            z-index: 100;
+        }
+
+        .character.slide-left {
+            transform: translateX(-300px);
+            opacity: 0;
+        }
+
+        .character.slide-right {
+            transform: translateX(300px);
+            opacity: 0;
         }
 
         .character svg {
@@ -56,7 +72,11 @@
             75% { transform: translate(-0.5px, 0) rotate(-0.3deg); }
         }
 
-        .character.speaking {
+        .character.speaking svg {
+            animation: sway 0.5s ease-in-out infinite;
+        }
+
+        .character.zoomed.speaking svg {
             animation: sway 0.5s ease-in-out infinite;
         }
 
@@ -81,16 +101,19 @@
             border: 2px solid #333;
             border-radius: 20px;
             padding: 12px 20px;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             color: #333;
             opacity: 0;
             transform: translateX(-50%) scale(0);
             transition: all 0.3s ease;
-            white-space: nowrap;
             top: -70px;
             left: 50%;
             transform-origin: bottom center;
+            max-width: 280px;
+            white-space: normal;
+            text-align: center;
+            line-height: 1.4;
         }
 
         .speech-bubble.visible {
@@ -121,34 +144,6 @@
             z-index: -1;
         }
 
-        /* Replay button */
-        .replay-btn {
-            position: absolute;
-            bottom: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 12px 30px;
-            font-size: 18px;
-            font-weight: bold;
-            background: #4472C4;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.3s ease;
-        }
-
-        .replay-btn:hover {
-            background: #3461b3;
-        }
-
-        .replay-btn.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
         /* Title */
         .title {
             position: absolute;
@@ -164,68 +159,71 @@
         .title.visible {
             opacity: 1;
         }
+
+        /* Instruction */
+        .instruction {
+            position: absolute;
+            bottom: 40px;
+            width: 100%;
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .instruction.visible {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
     <div class="scene">
         <div class="title">The Adventures Of Hexagon Lion, Square Man, and Triangirl</div>
+        <div class="instruction">Hover over a character to meet them. Click to learn more!</div>
 
-        <!-- Hexagon Lion - Orange - hexagons 2 and 4 very tight -->
+        <!-- Hexagon Lion - Orange -->
         <div class="character" id="hexagon-lion">
             <div class="speech-bubble">Hi, I'm Hexagon Lion!</div>
             <svg width="125" height="195" viewBox="0 0 125 195" xmlns="http://www.w3.org/2000/svg">
-                <!-- Hexagon 2 - top - very close to center -->
                 <polygon points="62,12 92,29 92,64 62,82 32,64 32,29" fill="#FF8C00"/>
-                <!-- Hexagon 1 - middle left -->
                 <polygon points="30,73 60,90 60,125 30,143 0,125 0,90" fill="#FF8C00"/>
-                <!-- Hexagon 3 - middle right -->
                 <polygon points="95,73 125,90 125,125 95,143 65,125 65,90" fill="#FF8C00"/>
-                <!-- Hexagon 4 - bottom - very close to center -->
                 <g class="jaw">
                     <polygon points="62,134 92,151 92,186 62,204 32,186 32,151" fill="#FF8C00"/>
                 </g>
             </svg>
         </div>
 
-        <!-- Square Man - Purple - all squares 70x70, 5px gaps -->
+        <!-- Square Man - Purple -->
         <div class="character" id="square-man">
             <div class="speech-bubble">Hi, I'm Square Man!</div>
             <svg width="145" height="225" viewBox="0 0 145 225" xmlns="http://www.w3.org/2000/svg">
-                <!-- Top square - centered -->
                 <rect x="37" y="0" width="70" height="70" fill="#A855F7"/>
-                <!-- Middle left square - 5px gap below top -->
                 <rect x="0" y="75" width="70" height="70" fill="#A855F7"/>
-                <!-- Middle right square - 5px gap from left -->
                 <rect x="75" y="75" width="70" height="70" fill="#A855F7"/>
-                <!-- Bottom square - 5px gap below middle -->
                 <g class="jaw">
                     <rect x="37" y="150" width="70" height="70" fill="#A855F7"/>
                 </g>
             </svg>
         </div>
 
-        <!-- Triangirl - Green - triangles 1 and 3 very tight to center -->
+        <!-- Triangirl - Green -->
         <div class="character" id="triangirl">
             <div class="speech-bubble">Hi, I'm Triangirl!</div>
             <svg width="163" height="110" viewBox="0 0 163 110" xmlns="http://www.w3.org/2000/svg">
-                <!-- Triangle 1 - top left (pointing UP) - very close to center -->
                 <polygon points="18,52 78,52 48,0" fill="#22C55E"/>
-                <!-- Triangle 2 - top middle (pointing DOWN) -->
                 <polygon points="58,0 118,0 88,52" fill="#22C55E"/>
-                <!-- Triangle 3 - top right (pointing UP) - very close to center -->
                 <polygon points="103,52 163,52 133,0" fill="#22C55E"/>
-                <!-- Triangle 4 - bottom (jaw - pointing DOWN) -->
                 <g class="jaw">
                     <polygon points="58,57 118,57 88,109" fill="#22C55E"/>
                 </g>
             </svg>
         </div>
-
-        <button class="replay-btn" id="replay-btn">Watch Again</button>
     </div>
 
     <script>
-        // Audio context for gobbledygook sounds
+        // Audio context
         let audioCtx = null;
 
         function initAudio() {
@@ -234,7 +232,7 @@
             }
         }
 
-        // Hexagon Lion - deep, warm rumbling sound
+        // Sound functions
         function playLionSound(duration) {
             if (!audioCtx) return;
             const syllables = Math.floor(duration / 140);
@@ -243,23 +241,17 @@
                     const osc = audioCtx.createOscillator();
                     const osc2 = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
-
                     osc.type = 'sawtooth';
                     osc2.type = 'triangle';
-
                     const baseFreq = 120 + Math.random() * 60;
                     osc.frequency.setValueAtTime(baseFreq, audioCtx.currentTime);
                     osc2.frequency.setValueAtTime(baseFreq * 1.5, audioCtx.currentTime);
-
                     osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.8, audioCtx.currentTime + 0.1);
-
                     gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
                     gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
-
                     osc.connect(gain);
                     osc2.connect(gain);
                     gain.connect(audioCtx.destination);
-
                     osc.start(audioCtx.currentTime);
                     osc2.start(audioCtx.currentTime);
                     osc.stop(audioCtx.currentTime + 0.12);
@@ -268,7 +260,6 @@
             }
         }
 
-        // Square Man - robotic, blocky beeps
         function playManSound(duration) {
             if (!audioCtx) return;
             const syllables = Math.floor(duration / 130);
@@ -276,27 +267,21 @@
                 setTimeout(() => {
                     const osc = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
-
                     osc.type = 'square';
-
                     const baseFreq = 180 + Math.random() * 80;
                     osc.frequency.setValueAtTime(baseFreq, audioCtx.currentTime);
                     osc.frequency.setValueAtTime(baseFreq * 1.2, audioCtx.currentTime + 0.04);
                     osc.frequency.setValueAtTime(baseFreq * 0.9, audioCtx.currentTime + 0.08);
-
                     gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
                     gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-
                     osc.connect(gain);
                     gain.connect(audioCtx.destination);
-
                     osc.start(audioCtx.currentTime);
                     osc.stop(audioCtx.currentTime + 0.1);
                 }, i * 110);
             }
         }
 
-        // Triangirl - bright, sparkly chimes
         function playGirlSound(duration) {
             if (!audioCtx) return;
             const syllables = Math.floor(duration / 100);
@@ -305,23 +290,17 @@
                     const osc = audioCtx.createOscillator();
                     const osc2 = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
-
                     osc.type = 'sine';
                     osc2.type = 'sine';
-
                     const baseFreq = 400 + Math.random() * 200;
                     osc.frequency.setValueAtTime(baseFreq, audioCtx.currentTime);
                     osc2.frequency.setValueAtTime(baseFreq * 1.5, audioCtx.currentTime);
-
                     osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.1, audioCtx.currentTime + 0.08);
-
                     gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
                     gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-
                     osc.connect(gain);
                     osc2.connect(gain);
                     gain.connect(audioCtx.destination);
-
                     osc.start(audioCtx.currentTime);
                     osc2.start(audioCtx.currentTime);
                     osc.stop(audioCtx.currentTime + 0.1);
@@ -335,89 +314,177 @@
         const man = document.getElementById('square-man');
         const girl = document.getElementById('triangirl');
         const title = document.querySelector('.title');
-        const replayBtn = document.getElementById('replay-btn');
+        const instruction = document.querySelector('.instruction');
 
         const lionBubble = lion.querySelector('.speech-bubble');
         const manBubble = man.querySelector('.speech-bubble');
         const girlBubble = girl.querySelector('.speech-bubble');
 
-        function runAnimation() {
-            // Reset
-            lion.classList.remove('visible', 'speaking');
-            man.classList.remove('visible', 'speaking');
-            girl.classList.remove('visible', 'speaking');
-            title.classList.remove('visible');
-            replayBtn.classList.remove('visible');
-            lionBubble.classList.remove('visible');
-            manBubble.classList.remove('visible');
-            girlBubble.classList.remove('visible');
+        // Character data
+        const characters = {
+            lion: {
+                element: lion,
+                bubble: lionBubble,
+                sound: playLionSound,
+                introText: "Hi, I'm Hexagon Lion!",
+                extendedText: "I live in Shapetown with my friends! I'm brave and strong. When we face a problem, I like to charge right in and tackle it head-on!",
+                introDuration: 1200,
+                extendedDuration: 3500
+            },
+            man: {
+                element: man,
+                bubble: manBubble,
+                sound: playManSound,
+                introText: "Hi, I'm Square Man!",
+                extendedText: "Welcome to Shapetown! I like to think things through carefully. When there's a problem, I make a plan and organize everything step by step.",
+                introDuration: 1200,
+                extendedDuration: 3500
+            },
+            girl: {
+                element: girl,
+                bubble: girlBubble,
+                sound: playGirlSound,
+                introText: "Hi, I'm Triangirl!",
+                extendedText: "Shapetown is the best! I love coming up with creative ideas. I see problems from different angles and find clever solutions!",
+                introDuration: 1200,
+                extendedDuration: 3200
+            }
+        };
 
-            initAudio();
+        let isAnimating = false;
+        let hoverTimeout = null;
 
-            const timeline = [
-                // Show title
-                { time: 300, action: () => title.classList.add('visible') },
+        // Speak function
+        function speak(char, text, duration) {
+            char.bubble.textContent = text;
+            char.bubble.classList.add('visible');
+            char.element.classList.add('speaking');
+            char.sound(duration);
 
-                // Characters enter
-                { time: 800, action: () => lion.classList.add('visible') },
-                { time: 1100, action: () => man.classList.add('visible') },
-                { time: 1400, action: () => girl.classList.add('visible') },
-
-                // Hexagon Lion speaks
-                { time: 2500, action: () => {
-                    lion.classList.add('speaking');
-                    lionBubble.classList.add('visible');
-                    playLionSound(1500);
-                }},
-                { time: 4000, action: () => {
-                    lion.classList.remove('speaking');
-                }},
-                { time: 4300, action: () => {
-                    lionBubble.classList.remove('visible');
-                }},
-
-                // Square Man speaks
-                { time: 4800, action: () => {
-                    man.classList.add('speaking');
-                    manBubble.classList.add('visible');
-                    playManSound(1400);
-                }},
-                { time: 6200, action: () => {
-                    man.classList.remove('speaking');
-                }},
-                { time: 6500, action: () => {
-                    manBubble.classList.remove('visible');
-                }},
-
-                // Triangirl speaks
-                { time: 7000, action: () => {
-                    girl.classList.add('speaking');
-                    girlBubble.classList.add('visible');
-                    playGirlSound(1300);
-                }},
-                { time: 8300, action: () => {
-                    girl.classList.remove('speaking');
-                }},
-                { time: 8600, action: () => {
-                    girlBubble.classList.remove('visible');
-                }},
-
-                // Show replay
-                { time: 9200, action: () => {
-                    replayBtn.classList.add('visible');
-                }}
-            ];
-
-            timeline.forEach(({ time, action }) => {
-                setTimeout(action, time);
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    char.element.classList.remove('speaking');
+                    setTimeout(() => {
+                        char.bubble.classList.remove('visible');
+                        resolve();
+                    }, 300);
+                }, duration);
             });
         }
 
+        // Hover handlers
+        function handleHover(charKey) {
+            if (isAnimating) return;
+            initAudio();
+
+            const char = characters[charKey];
+            char.bubble.textContent = char.introText;
+            char.bubble.classList.add('visible');
+            char.element.classList.add('speaking');
+            char.sound(char.introDuration);
+
+            hoverTimeout = setTimeout(() => {
+                char.element.classList.remove('speaking');
+            }, char.introDuration);
+        }
+
+        function handleHoverEnd(charKey) {
+            if (isAnimating) return;
+
+            const char = characters[charKey];
+            clearTimeout(hoverTimeout);
+            char.element.classList.remove('speaking');
+            char.bubble.classList.remove('visible');
+        }
+
+        // Click handler for extended speech
+        async function handleClick(charKey) {
+            if (isAnimating) return;
+            isAnimating = true;
+            initAudio();
+
+            const char = characters[charKey];
+            const others = Object.keys(characters).filter(k => k !== charKey);
+
+            // Hide instruction
+            instruction.classList.remove('visible');
+
+            // Stop any hover animation
+            char.bubble.classList.remove('visible');
+            char.element.classList.remove('speaking');
+
+            // Slide others off screen
+            others.forEach((key, index) => {
+                const other = characters[key];
+                if (index === 0 || (charKey === 'man' && key === 'lion')) {
+                    other.element.classList.add('slide-left');
+                } else {
+                    other.element.classList.add('slide-right');
+                }
+                other.element.classList.remove('visible');
+            });
+
+            // Zoom in the clicked character
+            await new Promise(r => setTimeout(r, 400));
+            char.element.classList.add('zoomed');
+
+            // Wait a moment then speak
+            await new Promise(r => setTimeout(r, 500));
+            await speak(char, char.extendedText, char.extendedDuration);
+
+            // Wait a moment after speaking
+            await new Promise(r => setTimeout(r, 800));
+
+            // Zoom out
+            char.element.classList.remove('zoomed');
+            await new Promise(r => setTimeout(r, 400));
+
+            // Bring others back
+            others.forEach(key => {
+                const other = characters[key];
+                other.element.classList.remove('slide-left', 'slide-right');
+                other.element.classList.add('visible');
+            });
+
+            // Show instruction again
+            await new Promise(r => setTimeout(r, 500));
+            instruction.classList.add('visible');
+
+            isAnimating = false;
+        }
+
+        // Set up event listeners
+        lion.addEventListener('mouseenter', () => handleHover('lion'));
+        lion.addEventListener('mouseleave', () => handleHoverEnd('lion'));
+        lion.addEventListener('click', () => handleClick('lion'));
+
+        man.addEventListener('mouseenter', () => handleHover('man'));
+        man.addEventListener('mouseleave', () => handleHoverEnd('man'));
+        man.addEventListener('click', () => handleClick('man'));
+
+        girl.addEventListener('mouseenter', () => handleHover('girl'));
+        girl.addEventListener('mouseleave', () => handleHoverEnd('girl'));
+        girl.addEventListener('click', () => handleClick('girl'));
+
+        // Initial load
         window.addEventListener('load', () => {
-            setTimeout(runAnimation, 300);
+            setTimeout(() => {
+                title.classList.add('visible');
+            }, 300);
+            setTimeout(() => {
+                lion.classList.add('visible');
+            }, 600);
+            setTimeout(() => {
+                man.classList.add('visible');
+            }, 800);
+            setTimeout(() => {
+                girl.classList.add('visible');
+            }, 1000);
+            setTimeout(() => {
+                instruction.classList.add('visible');
+            }, 1500);
         });
 
-        replayBtn.addEventListener('click', runAnimation);
         document.addEventListener('click', initAudio, { once: true });
     </script>
 </body>
