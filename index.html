@@ -107,18 +107,24 @@
             opacity: 0;
             transform: translateX(-50%) scale(0);
             transition: all 0.3s ease;
-            top: -70px;
+            top: -80px;
             left: 50%;
             transform-origin: bottom center;
             max-width: 280px;
             white-space: normal;
             text-align: center;
             line-height: 1.4;
+            z-index: 200;
         }
 
         .speech-bubble.visible {
             opacity: 1;
             transform: translateX(-50%) scale(1);
+        }
+
+        /* Move speech bubble higher when character is zoomed */
+        .character.zoomed .speech-bubble {
+            top: -160px;
         }
 
         .speech-bubble::after {
