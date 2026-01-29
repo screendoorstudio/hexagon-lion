@@ -158,6 +158,33 @@
             border-left: none;
         }
 
+        /* Triangirl: speech bubble on the LEFT side when zoomed */
+        #triangirl.zoomed .speech-bubble {
+            right: auto;
+            left: -300px;
+            transform-origin: right center;
+        }
+
+        #triangirl.zoomed .speech-bubble.visible {
+            transform: translateY(-50%) scale(1);
+        }
+
+        #triangirl.zoomed .speech-bubble::after {
+            left: auto;
+            right: -10px;
+            border: 10px solid transparent;
+            border-left-color: white;
+            border-right: none;
+        }
+
+        #triangirl.zoomed .speech-bubble::before {
+            left: auto;
+            right: -14px;
+            border: 12px solid transparent;
+            border-left-color: #333;
+            border-right: none;
+        }
+
         .speech-bubble::after {
             content: '';
             position: absolute;
