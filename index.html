@@ -170,19 +170,19 @@
     <div class="scene">
         <div class="title">The Adventures Of Hexagon Lion, Square Man, and Triangirl</div>
 
-        <!-- Hexagon Lion - Orange/Gold - Honeycomb arrangement -->
+        <!-- Hexagon Lion - Orange/Gold - with gaps between hexagons -->
         <div class="character" id="hexagon-lion">
             <div class="speech-bubble">Hi, I'm Hexagon Lion!</div>
-            <svg width="180" height="260" viewBox="0 0 180 260" xmlns="http://www.w3.org/2000/svg">
+            <svg width="180" height="280" viewBox="0 0 180 280" xmlns="http://www.w3.org/2000/svg">
                 <!-- Top hexagon (head) - centered -->
                 <polygon points="90,0 130,23 130,69 90,92 50,69 50,23" fill="#E67E22"/>
-                <!-- Middle left hexagon - nestled below top -->
-                <polygon points="50,69 90,92 90,138 50,161 10,138 10,92" fill="#E67E22"/>
-                <!-- Middle right hexagon - nestled below top -->
-                <polygon points="130,69 170,92 170,138 130,161 90,138 90,92" fill="#E67E22"/>
-                <!-- Bottom hexagon (jaw) - centered, nestled below middle two -->
+                <!-- Middle left hexagon - with gap -->
+                <polygon points="45,100 85,123 85,169 45,192 5,169 5,123" fill="#E67E22"/>
+                <!-- Middle right hexagon - with gap -->
+                <polygon points="135,100 175,123 175,169 135,192 95,169 95,123" fill="#E67E22"/>
+                <!-- Bottom hexagon (jaw) - centered with gap -->
                 <g class="jaw">
-                    <polygon points="90,138 130,161 130,207 90,230 50,207 50,161" fill="#E67E22"/>
+                    <polygon points="90,200 130,223 130,269 90,292 50,269 50,223" fill="#E67E22"/>
                 </g>
             </svg>
         </div>
@@ -194,29 +194,29 @@
                 <!-- Top square (head) - centered -->
                 <rect x="45" y="0" width="90" height="80" fill="#3498DB"/>
                 <!-- Middle left square -->
-                <rect x="0" y="85" width="87" height="80" fill="#3498DB"/>
+                <rect x="0" y="88" width="87" height="80" fill="#3498DB"/>
                 <!-- Middle right square -->
-                <rect x="93" y="85" width="87" height="80" fill="#3498DB"/>
+                <rect x="93" y="88" width="87" height="80" fill="#3498DB"/>
                 <!-- Bottom square (jaw) - centered -->
                 <g class="jaw">
-                    <rect x="45" y="170" width="90" height="80" fill="#3498DB"/>
+                    <rect x="45" y="176" width="90" height="80" fill="#3498DB"/>
                 </g>
             </svg>
         </div>
 
-        <!-- Triangirl - Pink - Two up triangles, large down triangle, small down triangle -->
+        <!-- Triangirl - Pink - Two up triangles (separated), large down triangle, small down triangle (all with gaps) -->
         <div class="character" id="triangirl">
             <div class="speech-bubble">Hi, I'm Triangirl!</div>
-            <svg width="200" height="240" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+            <svg width="220" height="280" viewBox="0 0 220 280" xmlns="http://www.w3.org/2000/svg">
                 <!-- Top left triangle (pointing UP) -->
-                <polygon points="15,100 60,10 105,100" fill="#E91E8C"/>
+                <polygon points="55,95 10,95 55,10" fill="#E91E8C"/>
                 <!-- Top right triangle (pointing UP) -->
-                <polygon points="95,100 140,10 185,100" fill="#E91E8C"/>
-                <!-- Middle large triangle (pointing DOWN) -->
-                <polygon points="10,95 190,95 100,190" fill="#E91E8C"/>
-                <!-- Bottom triangle (jaw - pointing DOWN) -->
+                <polygon points="165,95 210,95 165,10" fill="#E91E8C"/>
+                <!-- Middle large triangle (pointing DOWN) - with gap -->
+                <polygon points="15,105 205,105 110,200" fill="#E91E8C"/>
+                <!-- Bottom triangle (jaw - pointing DOWN) - with gap -->
                 <g class="jaw">
-                    <polygon points="50,180 150,180 100,240" fill="#E91E8C"/>
+                    <polygon points="60,210 160,210 110,270" fill="#E91E8C"/>
                 </g>
             </svg>
         </div>
