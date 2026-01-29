@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Animation Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(180deg, #87CEEB 0%, #98D8C8 100%);
+            min-height: 100vh;
+        }
+
+        .scene {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Floor */
+        .floor {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 25%;
+            background: linear-gradient(180deg, #8B7355 0%, #6B5344 100%);
+        }
+
+        .floor::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 10px;
+            background: #5D4037;
+        }
+
+        /* Character containers */
+        .character {
+            position: absolute;
+            bottom: 25%;
+            width: 120px;
+            height: 200px;
+            transition: transform 0.3s ease;
+        }
+
+        .character svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Initial positions (off-screen) */
+        #hexagon-lion {
+            left: -150px;
+        }
+
+        #square-man {
+            right: -150px;
+        }
+
+        #triangirl {
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -220px;
+        }
+
+        /* Entry animations */
+        @keyframes slideInLeft {
+            to {
+                left: 15%;
+            }
+        }
+
+        @keyframes slideInRight {
+            to {
+                right: 15%;
+            }
+        }
+
+        @keyframes slideInBottom {
+            to {
+                bottom: 25%;
+            }
+        }
+
+        #hexagon-lion.entered {
+            animation: slideInLeft 1s ease-out forwards;
+        }
+
+        #square-man.entered {
+            animation: slideInRight 1s ease-out forwards;
+        }
+
+        #triangirl.entered {
+            animation: slideInBottom 1s ease-out forwards;
+        }
+
+        /* Jaw animation */
+        @keyframes jawMove {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(12px); }
+        }
+
+        .jaw.speaking {
+            animation: jawMove 0.15s ease-in-out infinite;
+        }
+
+        /* Speech bubbles */
+        .speech-bubble {
+            position: absolute;
+            background: white;
+            border: 3px solid #333;
+            border-radius: 20px;
+            padding: 12px 18px;
+            font-size: 18px;
+            font-weight: bold;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            z-index: 100;
+        }
+
+        .speech-bubble.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 30px;
+            border: 10px solid transparent;
+            border-top-color: white;
+        }
+
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 27px;
+            border: 13px solid transparent;
+            border-top-color: #333;
+            z-index: -1;
+        }
+
+        #hexagon-lion .speech-bubble {
+            top: -60px;
+            left: 20px;
+            color: #C65D00;
+        }
+
+        #square-man .speech-bubble {
+            top: -60px;
+            right: 20px;
+            left: auto;
+            color: #2471A3;
+        }
+
+        #square-man .speech-bubble::after {
+            left: auto;
+            right: 30px;
+        }
+
+        #square-man .speech-bubble::before {
+            left: auto;
+            right: 27px;
+        }
+
+        #triangirl .speech-bubble {
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            color: #C2185B;
+        }
+
+        #triangirl .speech-bubble.visible {
+            transform: translateX(-50%) scale(1);
+        }
+
+        #triangirl .speech-bubble::after {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        #triangirl .speech-bubble::before {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Replay button */
+        .replay-btn {
+            position: absolute;
+            bottom: 40%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 40px;
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(180deg, #4CAF50, #388E3C);
+            color: white;
+            border: 4px solid #2E7D32;
+            border-radius: 15px;
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            box-shadow: 0 6px 0 #1B5E20;
+        }
+
+        .replay-btn:hover {
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 8px 0 #1B5E20;
+        }
+
+        .replay-btn:active {
+            transform: translateX(-50%) translateY(4px);
+            box-shadow: 0 2px 0 #1B5E20;
+        }
+
+        .replay-btn.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Title */
+        .title {
+            position: absolute;
+            top: 30px;
+            width: 100%;
+            text-align: center;
+            font-size: 36px;
+            color: #333;
+            text-shadow: 2px 2px 0 white;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .title.visible {
+            opacity: 1;
+        }
+
+        /* Idle bounce animation */
+        @keyframes idleBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .character.idle {
+            animation: idleBounce 2s ease-in-out infinite;
+        }
+
+        #triangirl.idle {
+            animation: idleBounce 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="scene">
+        <div class="title">Meet the Characters!</div>
+        <div class="floor"></div>
+
+        <!-- Hexagon Lion -->
+        <div class="character" id="hexagon-lion">
+            <div class="speech-bubble">Hello friends!</div>
+            <svg viewBox="0 0 100 180" xmlns="http://www.w3.org/2000/svg">
+                <!-- Top hexagon (head) -->
+                <polygon class="hex-top" points="50,5 80,20 80,50 50,65 20,50 20,20" fill="#E67E22" stroke="#C65D00" stroke-width="2"/>
+                <!-- Eyes -->
+                <circle cx="35" cy="35" r="6" fill="white"/>
+                <circle cx="65" cy="35" r="6" fill="white"/>
+                <circle cx="37" cy="36" r="3" fill="#333"/>
+                <circle cx="67" cy="36" r="3" fill="#333"/>
+                <!-- Mane hints -->
+                <polygon points="15,15 20,20 15,35" fill="#D35400"/>
+                <polygon points="85,15 80,20 85,35" fill="#D35400"/>
+                <polygon points="10,25 20,30 10,45" fill="#D35400"/>
+                <polygon points="90,25 80,30 90,45" fill="#D35400"/>
+
+                <!-- Middle left hexagon (body) -->
+                <polygon points="35,60 55,70 55,95 35,105 15,95 15,70" fill="#E67E22" stroke="#C65D00" stroke-width="2"/>
+
+                <!-- Middle right hexagon (body) -->
+                <polygon points="65,60 85,70 85,95 65,105 45,95 45,70" fill="#E67E22" stroke="#C65D00" stroke-width="2"/>
+
+                <!-- Bottom hexagon (jaw) - animated -->
+                <g class="jaw" id="lion-jaw">
+                    <polygon points="50,100 80,115 80,145 50,160 20,145 20,115" fill="#E67E22" stroke="#C65D00" stroke-width="2"/>
+                    <!-- Mouth -->
+                    <path d="M35,130 Q50,145 65,130" fill="none" stroke="#C65D00" stroke-width="2"/>
+                </g>
+
+                <!-- Legs -->
+                <rect x="25" y="155" width="15" height="25" fill="#E67E22" stroke="#C65D00" stroke-width="2" rx="3"/>
+                <rect x="60" y="155" width="15" height="25" fill="#E67E22" stroke="#C65D00" stroke-width="2" rx="3"/>
+            </svg>
+        </div>
+
+        <!-- Square Man -->
+        <div class="character" id="square-man">
+            <div class="speech-bubble">Hey there!</div>
+            <svg viewBox="0 0 100 180" xmlns="http://www.w3.org/2000/svg">
+                <!-- Top square (head) -->
+                <rect x="20" y="5" width="60" height="50" fill="#3498DB" stroke="#2471A3" stroke-width="2" rx="3"/>
+                <!-- Eyes -->
+                <rect x="30" y="20" width="12" height="12" fill="white" rx="2"/>
+                <rect x="58" y="20" width="12" height="12" fill="white" rx="2"/>
+                <rect x="33" y="23" width="6" height="6" fill="#333" rx="1"/>
+                <rect x="61" y="23" width="6" height="6" fill="#333" rx="1"/>
+                <!-- Eyebrows -->
+                <rect x="28" y="15" width="16" height="3" fill="#2471A3"/>
+                <rect x="56" y="15" width="16" height="3" fill="#2471A3"/>
+
+                <!-- Middle left square (body) -->
+                <rect x="10" y="55" width="40" height="40" fill="#3498DB" stroke="#2471A3" stroke-width="2" rx="3"/>
+
+                <!-- Middle right square (body) -->
+                <rect x="50" y="55" width="40" height="40" fill="#3498DB" stroke="#2471A3" stroke-width="2" rx="3"/>
+
+                <!-- Bottom square (jaw) - animated -->
+                <g class="jaw" id="man-jaw">
+                    <rect x="20" y="95" width="60" height="50" fill="#3498DB" stroke="#2471A3" stroke-width="2" rx="3"/>
+                    <!-- Mouth -->
+                    <rect x="35" y="115" width="30" height="8" fill="#2471A3" rx="2"/>
+                </g>
+
+                <!-- Legs -->
+                <rect x="25" y="145" width="18" height="35" fill="#3498DB" stroke="#2471A3" stroke-width="2" rx="3"/>
+                <rect x="57" y="145" width="18" height="35" fill="#3498DB" stroke="#2471A3" stroke-width="2" rx="3"/>
+            </svg>
+        </div>
+
+        <!-- Triangirl -->
+        <div class="character" id="triangirl">
+            <div class="speech-bubble">Hi everyone!</div>
+            <svg viewBox="0 0 100 180" xmlns="http://www.w3.org/2000/svg">
+                <!-- Top left triangle (pointing up - ear/hair) -->
+                <polygon points="25,50 50,5 50,50" fill="#E91E8C" stroke="#C2185B" stroke-width="2"/>
+
+                <!-- Top right triangle (pointing up - ear/hair) -->
+                <polygon points="75,50 50,5 50,50" fill="#E91E8C" stroke="#C2185B" stroke-width="2"/>
+
+                <!-- Face area (center of top triangles) -->
+                <circle cx="50" cy="35" r="20" fill="#E91E8C"/>
+                <!-- Eyes -->
+                <ellipse cx="42" cy="32" rx="5" ry="6" fill="white"/>
+                <ellipse cx="58" cy="32" rx="5" ry="6" fill="white"/>
+                <circle cx="43" cy="33" r="3" fill="#333"/>
+                <circle cx="59" cy="33" r="3" fill="#333"/>
+                <!-- Eyelashes -->
+                <path d="M37,28 L35,25" stroke="#C2185B" stroke-width="1.5"/>
+                <path d="M40,26 L39,22" stroke="#C2185B" stroke-width="1.5"/>
+                <path d="M63,28 L65,25" stroke="#C2185B" stroke-width="1.5"/>
+                <path d="M60,26 L61,22" stroke="#C2185B" stroke-width="1.5"/>
+
+                <!-- Middle triangle (pointing down - body) -->
+                <polygon points="20,50 80,50 50,100" fill="#E91E8C" stroke="#C2185B" stroke-width="2"/>
+
+                <!-- Bottom triangle (jaw - pointing down) - animated -->
+                <g class="jaw" id="girl-jaw">
+                    <polygon points="30,95 70,95 50,140" fill="#E91E8C" stroke="#C2185B" stroke-width="2"/>
+                    <!-- Smile -->
+                    <path d="M42,110 Q50,120 58,110" fill="none" stroke="#C2185B" stroke-width="2"/>
+                </g>
+
+                <!-- Legs (triangular) -->
+                <polygon points="35,135 45,135 40,175" fill="#E91E8C" stroke="#C2185B" stroke-width="2"/>
+                <polygon points="55,135 65,135 60,175" fill="#E91E8C" stroke="#C2185B" stroke-width="2"/>
+            </svg>
+        </div>
+
+        <button class="replay-btn" id="replay-btn">Watch Again!</button>
+    </div>
+
+    <script>
+        // Audio context for gobbledygook sounds
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        // Generate cute gobbledygook sound
+        function playGobbledygook(baseFreq, duration, characterType) {
+            if (!audioCtx) return;
+
+            const syllables = Math.floor(duration / 150);
+
+            for (let i = 0; i < syllables; i++) {
+                setTimeout(() => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+
+                    // Different wave types for different characters
+                    const waveTypes = {
+                        lion: 'sawtooth',
+                        man: 'square',
+                        girl: 'sine'
+                    };
+                    osc.type = waveTypes[characterType] || 'sine';
+
+                    // Randomize frequency around base
+                    const freqVariation = baseFreq * (0.8 + Math.random() * 0.4);
+                    osc.frequency.setValueAtTime(freqVariation, audioCtx.currentTime);
+
+                    // Quick pitch bend for expressiveness
+                    osc.frequency.exponentialRampToValueAtTime(
+                        freqVariation * (0.9 + Math.random() * 0.2),
+                        audioCtx.currentTime + 0.08
+                    );
+
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+
+                    osc.start(audioCtx.currentTime);
+                    osc.stop(audioCtx.currentTime + 0.1);
+                }, i * 120);
+            }
+        }
+
+        // Character elements
+        const lion = document.getElementById('hexagon-lion');
+        const man = document.getElementById('square-man');
+        const girl = document.getElementById('triangirl');
+        const title = document.querySelector('.title');
+        const replayBtn = document.getElementById('replay-btn');
+
+        // Jaw elements
+        const lionJaw = document.getElementById('lion-jaw');
+        const manJaw = document.getElementById('man-jaw');
+        const girlJaw = document.getElementById('girl-jaw');
+
+        // Speech bubbles
+        const lionBubble = lion.querySelector('.speech-bubble');
+        const manBubble = man.querySelector('.speech-bubble');
+        const girlBubble = girl.querySelector('.speech-bubble');
+
+        // Animation timeline
+        function runAnimation() {
+            // Reset everything
+            lion.classList.remove('entered', 'idle');
+            man.classList.remove('entered', 'idle');
+            girl.classList.remove('entered', 'idle');
+            title.classList.remove('visible');
+            replayBtn.classList.remove('visible');
+
+            lion.style.left = '-150px';
+            man.style.right = '-150px';
+            girl.style.bottom = '-220px';
+
+            lionBubble.classList.remove('visible');
+            manBubble.classList.remove('visible');
+            girlBubble.classList.remove('visible');
+
+            lionJaw.classList.remove('speaking');
+            manJaw.classList.remove('speaking');
+            girlJaw.classList.remove('speaking');
+
+            // Initialize audio on user interaction
+            initAudio();
+
+            // Timeline
+            const timeline = [
+                // Show title
+                { time: 500, action: () => title.classList.add('visible') },
+
+                // Hexagon Lion enters
+                { time: 1000, action: () => lion.classList.add('entered') },
+
+                // Square Man enters
+                { time: 1500, action: () => man.classList.add('entered') },
+
+                // Triangirl enters
+                { time: 2000, action: () => girl.classList.add('entered') },
+
+                // Hexagon Lion speaks
+                { time: 3500, action: () => {
+                    lionBubble.classList.add('visible');
+                    lionJaw.classList.add('speaking');
+                    playGobbledygook(180, 1200, 'lion');
+                }},
+                { time: 4700, action: () => {
+                    lionJaw.classList.remove('speaking');
+                }},
+                { time: 5000, action: () => {
+                    lionBubble.classList.remove('visible');
+                }},
+
+                // Square Man speaks
+                { time: 5300, action: () => {
+                    manBubble.classList.add('visible');
+                    manJaw.classList.add('speaking');
+                    playGobbledygook(140, 900, 'man');
+                }},
+                { time: 6200, action: () => {
+                    manJaw.classList.remove('speaking');
+                }},
+                { time: 6500, action: () => {
+                    manBubble.classList.remove('visible');
+                }},
+
+                // Triangirl speaks
+                { time: 6800, action: () => {
+                    girlBubble.classList.add('visible');
+                    girlJaw.classList.add('speaking');
+                    playGobbledygook(280, 1100, 'girl');
+                }},
+                { time: 7900, action: () => {
+                    girlJaw.classList.remove('speaking');
+                }},
+                { time: 8200, action: () => {
+                    girlBubble.classList.remove('visible');
+                }},
+
+                // All idle together
+                { time: 8500, action: () => {
+                    lion.classList.add('idle');
+                    man.classList.add('idle');
+                    girl.classList.add('idle');
+                }},
+
+                // Show replay button
+                { time: 9000, action: () => {
+                    replayBtn.classList.add('visible');
+                }}
+            ];
+
+            // Execute timeline
+            timeline.forEach(({ time, action }) => {
+                setTimeout(action, time);
+            });
+        }
+
+        // Start animation on load
+        window.addEventListener('load', () => {
+            setTimeout(runAnimation, 500);
+        });
+
+        // Replay button
+        replayBtn.addEventListener('click', () => {
+            runAnimation();
+        });
+
+        // Also init audio on any click (for browsers that block autoplay)
+        document.addEventListener('click', initAudio, { once: true });
+    </script>
+</body>
+</html>
