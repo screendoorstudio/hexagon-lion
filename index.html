@@ -122,9 +122,40 @@
             transform: translateX(-50%) scale(1);
         }
 
-        /* Move speech bubble higher when character is zoomed */
+        /* Move speech bubble to the side when character is zoomed */
         .character.zoomed .speech-bubble {
-            top: -160px;
+            top: 50%;
+            left: auto;
+            right: -300px;
+            transform: translateY(-50%) scale(0);
+            transform-origin: left center;
+        }
+
+        .character.zoomed .speech-bubble.visible {
+            transform: translateY(-50%) scale(1);
+        }
+
+        /* Adjust the tail to point left when zoomed */
+        .character.zoomed .speech-bubble::after {
+            bottom: auto;
+            top: 50%;
+            left: -10px;
+            right: auto;
+            transform: translateY(-50%);
+            border: 10px solid transparent;
+            border-right-color: white;
+            border-left: none;
+        }
+
+        .character.zoomed .speech-bubble::before {
+            bottom: auto;
+            top: 50%;
+            left: -14px;
+            right: auto;
+            transform: translateY(-50%);
+            border: 12px solid transparent;
+            border-right-color: #333;
+            border-left: none;
         }
 
         .speech-bubble::after {
