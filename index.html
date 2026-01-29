@@ -28,7 +28,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 80px;
+            gap: 100px;
         }
 
         .character {
@@ -45,6 +45,7 @@
 
         .character svg {
             display: block;
+            overflow: visible;
         }
 
         /* Vibrate animation when speaking */
@@ -62,7 +63,7 @@
         /* Jaw animation */
         @keyframes jawMove {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(8px); }
+            50% { transform: translateY(10px); }
         }
 
         .jaw {
@@ -84,7 +85,7 @@
             font-weight: bold;
             color: #333;
             opacity: 0;
-            transform: scale(0);
+            transform: translateX(-50%) scale(0);
             transition: all 0.3s ease;
             white-space: nowrap;
             top: -70px;
@@ -95,10 +96,6 @@
         .speech-bubble.visible {
             opacity: 1;
             transform: translateX(-50%) scale(1);
-        }
-
-        .speech-bubble:not(.visible) {
-            transform: translateX(-50%) scale(0);
         }
 
         .speech-bubble::after {
@@ -173,53 +170,53 @@
     <div class="scene">
         <div class="title">The Adventures Of Hexagon Lion, Square Man, and Triangirl</div>
 
-        <!-- Hexagon Lion -->
+        <!-- Hexagon Lion - Orange/Gold - Honeycomb arrangement -->
         <div class="character" id="hexagon-lion">
             <div class="speech-bubble">Hi, I'm Hexagon Lion!</div>
-            <svg width="140" height="200" viewBox="0 0 140 200" xmlns="http://www.w3.org/2000/svg">
-                <!-- Top hexagon (head) -->
-                <polygon points="70,5 110,25 110,60 70,80 30,60 30,25" fill="#4472C4"/>
-                <!-- Middle left hexagon -->
-                <polygon points="45,75 85,95 85,130 45,150 5,130 5,95" fill="#4472C4"/>
-                <!-- Middle right hexagon -->
-                <polygon points="95,75 135,95 135,130 95,150 55,130 55,95" fill="#4472C4"/>
-                <!-- Bottom hexagon (jaw) -->
+            <svg width="180" height="260" viewBox="0 0 180 260" xmlns="http://www.w3.org/2000/svg">
+                <!-- Top hexagon (head) - centered -->
+                <polygon points="90,0 130,23 130,69 90,92 50,69 50,23" fill="#E67E22"/>
+                <!-- Middle left hexagon - nestled below top -->
+                <polygon points="50,69 90,92 90,138 50,161 10,138 10,92" fill="#E67E22"/>
+                <!-- Middle right hexagon - nestled below top -->
+                <polygon points="130,69 170,92 170,138 130,161 90,138 90,92" fill="#E67E22"/>
+                <!-- Bottom hexagon (jaw) - centered, nestled below middle two -->
                 <g class="jaw">
-                    <polygon points="70,145 110,165 110,200 70,220 30,200 30,165" fill="#4472C4"/>
+                    <polygon points="90,138 130,161 130,207 90,230 50,207 50,161" fill="#E67E22"/>
                 </g>
             </svg>
         </div>
 
-        <!-- Square Man -->
+        <!-- Square Man - Blue - Stacked squares with gaps -->
         <div class="character" id="square-man">
             <div class="speech-bubble">Hi, I'm Square Man!</div>
-            <svg width="150" height="210" viewBox="0 0 150 210" xmlns="http://www.w3.org/2000/svg">
-                <!-- Top square (head) -->
-                <rect x="35" y="0" width="80" height="70" fill="#4472C4"/>
+            <svg width="180" height="280" viewBox="0 0 180 280" xmlns="http://www.w3.org/2000/svg">
+                <!-- Top square (head) - centered -->
+                <rect x="45" y="0" width="90" height="80" fill="#3498DB"/>
                 <!-- Middle left square -->
-                <rect x="0" y="75" width="72" height="70" fill="#4472C4"/>
+                <rect x="0" y="85" width="87" height="80" fill="#3498DB"/>
                 <!-- Middle right square -->
-                <rect x="78" y="75" width="72" height="70" fill="#4472C4"/>
-                <!-- Bottom square (jaw) -->
+                <rect x="93" y="85" width="87" height="80" fill="#3498DB"/>
+                <!-- Bottom square (jaw) - centered -->
                 <g class="jaw">
-                    <rect x="35" y="150" width="80" height="70" fill="#4472C4"/>
+                    <rect x="45" y="170" width="90" height="80" fill="#3498DB"/>
                 </g>
             </svg>
         </div>
 
-        <!-- Triangirl -->
+        <!-- Triangirl - Pink - Two up triangles, large down triangle, small down triangle -->
         <div class="character" id="triangirl">
             <div class="speech-bubble">Hi, I'm Triangirl!</div>
-            <svg width="160" height="200" viewBox="0 0 160 200" xmlns="http://www.w3.org/2000/svg">
-                <!-- Top left triangle (pointing up) -->
-                <polygon points="10,90 55,5 55,90" fill="#4472C4"/>
-                <!-- Top right triangle (pointing up) -->
-                <polygon points="105,5 150,90 105,90" fill="#4472C4"/>
-                <!-- Middle triangle (pointing down) -->
-                <polygon points="15,85 145,85 80,160" fill="#4472C4"/>
-                <!-- Bottom triangle (jaw - pointing down) -->
+            <svg width="200" height="240" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+                <!-- Top left triangle (pointing UP) -->
+                <polygon points="15,100 60,10 105,100" fill="#E91E8C"/>
+                <!-- Top right triangle (pointing UP) -->
+                <polygon points="95,100 140,10 185,100" fill="#E91E8C"/>
+                <!-- Middle large triangle (pointing DOWN) -->
+                <polygon points="10,95 190,95 100,190" fill="#E91E8C"/>
+                <!-- Bottom triangle (jaw - pointing DOWN) -->
                 <g class="jaw">
-                    <polygon points="45,155 115,155 80,210" fill="#4472C4"/>
+                    <polygon points="50,180 150,180 100,240" fill="#E91E8C"/>
                 </g>
             </svg>
         </div>
@@ -237,28 +234,57 @@
             }
         }
 
-        // Generate cute gobbledygook sound
-        function playGobbledygook(baseFreq, duration, waveType) {
+        // Hexagon Lion - deep, warm rumbling sound
+        function playLionSound(duration) {
             if (!audioCtx) return;
+            const syllables = Math.floor(duration / 140);
+            for (let i = 0; i < syllables; i++) {
+                setTimeout(() => {
+                    const osc = audioCtx.createOscillator();
+                    const osc2 = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
 
-            const syllables = Math.floor(duration / 120);
+                    osc.type = 'sawtooth';
+                    osc2.type = 'triangle';
 
+                    const baseFreq = 120 + Math.random() * 60;
+                    osc.frequency.setValueAtTime(baseFreq, audioCtx.currentTime);
+                    osc2.frequency.setValueAtTime(baseFreq * 1.5, audioCtx.currentTime);
+
+                    osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.8, audioCtx.currentTime + 0.1);
+
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
+
+                    osc.connect(gain);
+                    osc2.connect(gain);
+                    gain.connect(audioCtx.destination);
+
+                    osc.start(audioCtx.currentTime);
+                    osc2.start(audioCtx.currentTime);
+                    osc.stop(audioCtx.currentTime + 0.12);
+                    osc2.stop(audioCtx.currentTime + 0.12);
+                }, i * 120);
+            }
+        }
+
+        // Square Man - robotic, blocky beeps
+        function playManSound(duration) {
+            if (!audioCtx) return;
+            const syllables = Math.floor(duration / 130);
             for (let i = 0; i < syllables; i++) {
                 setTimeout(() => {
                     const osc = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
 
-                    osc.type = waveType;
+                    osc.type = 'square';
 
-                    // Randomize frequency around base
-                    const freqVariation = baseFreq * (0.8 + Math.random() * 0.4);
-                    osc.frequency.setValueAtTime(freqVariation, audioCtx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(
-                        freqVariation * (0.85 + Math.random() * 0.3),
-                        audioCtx.currentTime + 0.08
-                    );
+                    const baseFreq = 180 + Math.random() * 80;
+                    osc.frequency.setValueAtTime(baseFreq, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(baseFreq * 1.2, audioCtx.currentTime + 0.04);
+                    osc.frequency.setValueAtTime(baseFreq * 0.9, audioCtx.currentTime + 0.08);
 
-                    gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
                     gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
 
                     osc.connect(gain);
@@ -266,7 +292,41 @@
 
                     osc.start(audioCtx.currentTime);
                     osc.stop(audioCtx.currentTime + 0.1);
-                }, i * 100);
+                }, i * 110);
+            }
+        }
+
+        // Triangirl - bright, sparkly chimes
+        function playGirlSound(duration) {
+            if (!audioCtx) return;
+            const syllables = Math.floor(duration / 100);
+            for (let i = 0; i < syllables; i++) {
+                setTimeout(() => {
+                    const osc = audioCtx.createOscillator();
+                    const osc2 = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+
+                    osc.type = 'sine';
+                    osc2.type = 'sine';
+
+                    const baseFreq = 400 + Math.random() * 200;
+                    osc.frequency.setValueAtTime(baseFreq, audioCtx.currentTime);
+                    osc2.frequency.setValueAtTime(baseFreq * 1.5, audioCtx.currentTime);
+
+                    osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.1, audioCtx.currentTime + 0.08);
+
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+
+                    osc.connect(gain);
+                    osc2.connect(gain);
+                    gain.connect(audioCtx.destination);
+
+                    osc.start(audioCtx.currentTime);
+                    osc2.start(audioCtx.currentTime);
+                    osc.stop(audioCtx.currentTime + 0.1);
+                    osc2.stop(audioCtx.currentTime + 0.1);
+                }, i * 80);
             }
         }
 
@@ -307,7 +367,7 @@
                 { time: 2500, action: () => {
                     lion.classList.add('speaking');
                     lionBubble.classList.add('visible');
-                    playGobbledygook(180, 1500, 'sawtooth');
+                    playLionSound(1500);
                 }},
                 { time: 4000, action: () => {
                     lion.classList.remove('speaking');
@@ -320,7 +380,7 @@
                 { time: 4800, action: () => {
                     man.classList.add('speaking');
                     manBubble.classList.add('visible');
-                    playGobbledygook(140, 1400, 'square');
+                    playManSound(1400);
                 }},
                 { time: 6200, action: () => {
                     man.classList.remove('speaking');
@@ -333,7 +393,7 @@
                 { time: 7000, action: () => {
                     girl.classList.add('speaking');
                     girlBubble.classList.add('visible');
-                    playGobbledygook(260, 1300, 'sine');
+                    playGirlSound(1300);
                 }},
                 { time: 8300, action: () => {
                     girl.classList.remove('speaking');
