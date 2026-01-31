@@ -1,6 +1,6 @@
 # Hexagon Lion - Character Animation Demo
 
-An interactive web demo featuring three animated characters from Shapetown.
+An interactive web demo featuring three animated characters from Round Town.
 
 ## Live Site
 https://hexagon-lion.vercel.app
@@ -15,7 +15,7 @@ https://github.com/screendoorstudio/hexagon-lion
 - Personality: Brave and strong, tackles problems head-on
 - Sound: Deep, warm rumbling (sawtooth + triangle waves)
 
-### Square Man (Purple - #A855F7)
+### Square Bear (Purple - #A855F7)
 - Made of 4 squares: 1 top (head), 2 middle (body), 1 bottom (jaw)
 - Personality: Methodical, makes plans, organizes step by step
 - Sound: Robotic, blocky beeps (square wave)
@@ -36,8 +36,8 @@ https://github.com/screendoorstudio/hexagon-lion
 ### Click Interaction
 - Other characters slide off screen (left/right)
 - Clicked character zooms in (1.5x scale)
-- Speech bubble appears to the side (right for Lion/Square Man, left for Triangirl)
-- Character tells more about themselves and Shapetown
+- Speech bubble appears to the side (right for Lion/Square Bear, left for Triangirl)
+- Character tells more about themselves and Round Town
 - After speech, character zooms out and others return
 
 ## Tech Stack

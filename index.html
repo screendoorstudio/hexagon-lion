@@ -239,11 +239,28 @@
         .instruction.visible {
             opacity: 1;
         }
+
+        /* Round Town circular background */
+        .town-circle {
+            position: absolute;
+            width: 700px;
+            height: 700px;
+            border: 4px solid #ddd;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        .town-circle.visible {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
     <div class="scene">
-        <div class="title">The Adventures Of Hexagon Lion, Square Man, and Triangirl</div>
+        <div class="town-circle"></div>
+        <div class="title">The Adventures Of Hexagon Lion, Square Bear, and Triangirl</div>
         <div class="instruction">Hover over a character to meet them. Click to learn more!</div>
 
         <!-- Hexagon Lion - Orange -->
@@ -259,9 +276,9 @@
             </svg>
         </div>
 
-        <!-- Square Man - Purple -->
+        <!-- Square Bear - Purple -->
         <div class="character" id="square-man">
-            <div class="speech-bubble">Hi, I'm Square Man!</div>
+            <div class="speech-bubble">Hi, I'm Square Bear!</div>
             <svg width="145" height="225" viewBox="0 0 145 225" xmlns="http://www.w3.org/2000/svg">
                 <rect x="37" y="0" width="70" height="70" fill="#A855F7"/>
                 <rect x="0" y="75" width="70" height="70" fill="#A855F7"/>
@@ -379,6 +396,7 @@
         const girl = document.getElementById('triangirl');
         const title = document.querySelector('.title');
         const instruction = document.querySelector('.instruction');
+        const townCircle = document.querySelector('.town-circle');
 
         const lionBubble = lion.querySelector('.speech-bubble');
         const manBubble = man.querySelector('.speech-bubble');
@@ -391,7 +409,7 @@
                 bubble: lionBubble,
                 sound: playLionSound,
                 introText: "Hi, I'm Hexagon Lion!",
-                extendedText: "I live in Shapetown with my friends! I'm brave and strong. When we face a problem, I like to charge right in and tackle it head-on!",
+                extendedText: "I live in Round Town with my friends! I'm brave and strong. When we face a problem, I like to charge right in and tackle it head-on!",
                 introDuration: 1200,
                 extendedDuration: 3500
             },
@@ -399,8 +417,8 @@
                 element: man,
                 bubble: manBubble,
                 sound: playManSound,
-                introText: "Hi, I'm Square Man!",
-                extendedText: "Welcome to Shapetown! I like to think things through carefully. When there's a problem, I make a plan and organize everything step by step.",
+                introText: "Hi, I'm Square Bear!",
+                extendedText: "Welcome to Round Town! I like to think things through carefully. When there's a problem, I make a plan and organize everything step by step.",
                 introDuration: 1200,
                 extendedDuration: 3500
             },
@@ -409,7 +427,7 @@
                 bubble: girlBubble,
                 sound: playGirlSound,
                 introText: "Hi, I'm Triangirl!",
-                extendedText: "Shapetown is the best! I love coming up with creative ideas. I see problems from different angles and find clever solutions!",
+                extendedText: "Round Town is the best! I love coming up with creative ideas. I see problems from different angles and find clever solutions!",
                 introDuration: 1200,
                 extendedDuration: 3200
             }
@@ -532,6 +550,9 @@
 
         // Initial load
         window.addEventListener('load', () => {
+            setTimeout(() => {
+                townCircle.classList.add('visible');
+            }, 100);
             setTimeout(() => {
                 title.classList.add('visible');
             }, 300);
