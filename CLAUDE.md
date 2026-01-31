@@ -27,6 +27,10 @@ https://github.com/screendoorstudio/hexagon-lion
 
 ## Features
 
+### Visual Design
+- Circular outline background representing Round Town (700px diameter)
+- Characters positioned within the circular boundary
+
 ### Hover Interaction
 - Character introduces themselves with name
 - Speech bubble appears above character
@@ -64,6 +68,7 @@ Hexagon Lion/
 - Jaw movement: 0.4s ease-in-out, moves down 6px
 
 ### Transitions
+- Town circle: fade in (0.8s)
 - Character entry: fade in + slide up (0.8s)
 - Zoom: scale to 1.5x (0.8s)
 - Slide off: translate 300px left/right (0.8s)
